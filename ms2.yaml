@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms2-deployment
+  labels:
+    app: ms2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ms2
+  template:
+    metadata:
+      labels:
+        app: ms2
+    spec:
+      containers:
+      - name: ms2
+        image: singhaws/micro-service-two:latest
+        ports:
+        - containerPort: 8001
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: ms2-service
+  labels:
+    app: ms2
+spec:
+    type:   LoadBalancer
+    selector:
+       app: ms2
+    ports:
+      - protocol: TCP
+        port: 80
+        targetPort: 8001
+
+    
+    
+
