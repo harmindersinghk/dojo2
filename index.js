@@ -4,7 +4,7 @@ const PORT = process.env.PORT || 8001
 const log = require('./lib/log')
 
 var appzip = require('appmetrics-zipkin')({
-    host: '10.0.24.57',
+    host: 'http://51.141.29.230',
     port: 9401,
     serviceName:pkg.name,
     sampleRate: 1.0
