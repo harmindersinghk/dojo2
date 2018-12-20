@@ -1,0 +1,33 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/mern-starter
+    # The primary container is an instance of the first image listed. The job's commands run in this container.
+    docker:
+      - image: singhaws/micro-service-two
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Install Docker client
+          command: |
+            set -x
+            VER="17.03.0-ce"
+            curl -L -o /tmp/docker-$VER.tgz https://download.docker.com/linux/static/stable/x86_64/docker-$VER.tgz
+            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+            mv /tmp/docker/* /usr/bin
+
+      # build and push Docker image
+      - run: |
+          TAG=0.1.$CIRCLE_BUILD_NUM
+          docker build -t   singhaws/micro-service-two:$TAG .      # (4)
+          docker login -u $DOCKER_USER -p $DOCKER_PASS         # (5)
+          docker push singhaws/micro-service-two:$TAG
+          az login --service-principal --username $APP_ID --password $PASSWORD --tenant $TENANT_ID
+          az aks get-credentials --resource-group acctestRG1 --name acctestaks1 --overwrite-existing
+          sed "s/:latest/:$TAG/" <ms2.yaml >ms2tagged.yaml
+          cat ms2tagged.yaml
+          kubectl apply -f ms2tagged.yaml
+      
+  
