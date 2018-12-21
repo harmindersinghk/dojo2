@@ -17,15 +17,15 @@ spec:
       containers:
       - name: zk
         image: openzipkin/zipkin
-        ports
+        ports:
         - containerPort: 9411
-    env:
-    - name: STORAGE_TYPE
-      value: elasticsearch
-    - name: ES_HOSTS
-      value: http://10.0.218.164:9200
-    - name: ZIPKIN_LOG_LEVEL
-      value: DEBUG
+        env:
+        - name: STORAGE_TYPE
+          value: elasticsearch
+        - name: ES_HOSTS
+          value: 'http://10.0.218.164:9200'
+        - name: ZIPKIN_LOG_LEVEL
+          value: DEBUG
 
         
 ---
